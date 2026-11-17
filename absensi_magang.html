@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SITABE Magang - Absensi Peserta Magang BP2JK Sulsel</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            pupr: {
+              navy: '#0F2854',
+              blue: '#1E3A8A',
+              gold: '#F59E0B',
+              amber: '#EAB308',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .mirror-video { transform: scaleX(-1); }
+    .fade-in {
+      animation: fadeIn 0.22s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-200 text-slate-800 font-sans antialiased selection:bg-amber-200 selection:text-slate-900">
+
+  <!-- Mobile Container Frame -->
+  <div id="app-container" class="mx-auto min-h-screen max-w-md bg-slate-50 shadow-xl relative flex flex-col overflow-x-hidden border-x border-slate-200/80">
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[400px] pointer-events-none flex flex-col gap-2"></div>
+
+    <!-- ==================== VIEW 1: LOGIN SCREEN (SSO pegawai.sitabe.com) ==================== -->
+    <div id="view-login" class="flex-1 flex flex-col justify-between bg-gradient-to-b from-[#0F2854] via-[#16366E] to-slate-50 p-6 fade-in">
+      <!-- Top Branding -->
+      <div class="pt-5 text-center text-white">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-full text-[11px] font-medium text-amber-300 mb-4">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>SSO Terhubung &bull; pegawai.sitabe.com</span>
+        </div>
+        
+        <div class="w-16 h-16 mx-auto bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-2xl shadow-lg shadow-amber-500/30 flex items-center justify-center mb-3.5 border-2 border-white/25">
+          <i data-lucide="building-2" class="w-8 h-8 text-[#0F2854]"></i>
+        </div>
+        
+        <h1 class="text-2xl font-extrabold tracking-tight">SITABE <span class="text-amber-400">Magang</span></h1>
+        <p class="text-xs text-slate-200 mt-1 max-w-[290px] mx-auto leading-relaxed">
+          Sistem Informasi Presensi Peserta Magang<br/>
+          <strong class="text-white">BP2JK Wilayah Sulawesi Selatan</strong>
+        </p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 my-5">
+        <div class="mb-4">
+          <h2 class="text-base font-bold text-slate-900">Login Akun SITABE</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Masuk menggunakan akun <strong>pegawai.sitabe.com</strong> Anda</p>
+        </div>
+
+        <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Username / NIM / NIP</label>
+            <div class="relative">
+              <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="login-username" placeholder="andi.rifqi@sitabe.com" required
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:bg-white transition" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="password" id="login-password" placeholder="••••••••" required
+                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:bg-white transition" />
+              <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full py-3 bg-[#0F2854] hover:bg-[#1E3A8A] active:scale-[0.99] text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-950/20 transition flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4 text-amber-400"></i>
+            <span>Masuk via SSO Sitabe</span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative my-5">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-200"></div>
+          </div>
+          <div class="relative flex justify-center text-[10px] uppercase">
+            <span class="bg-white px-2.5 text-slate-400 font-bold tracking-wider">Akses Demo 1-Klik</span>
+          </div>
+        </div>
+
+        <!-- Two Distinct Role Demo Buttons -->
+        <div class="space-y-2.5">
+          <button type="button" onclick="loginAsRole('intern')"
+            class="w-full p-3 bg-amber-50 hover:bg-amber-100/80 border border-amber-200 rounded-2xl flex items-center justify-between transition group">
+            <div class="flex items-center gap-3 text-left">
+              <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-900">Masuk sebagai Peserta Magang</div>
+                <div class="text-[11px] text-slate-600">Andi Muh. Rifqi &bull; Khusus Absensi & Riwayat Pribadi</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-amber-700 group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <button type="button" onclick="loginAsRole('admin')"
+            class="w-full p-3 bg-blue-50 hover:bg-blue-100/80 border border-blue-200 rounded-2xl flex items-center justify-between transition group">
+            <div class="flex items-center gap-3 text-left">
+              <div class="w-9 h-9 rounded-xl bg-[#0F2854] text-white flex items-center justify-center shrink-0 shadow-sm">
+                <i data-lucide="shield" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-900">Masuk sebagai Admin BP2JK</div>
+                <div class="text-[11px] text-slate-600">Administrator &bull; Rekapitulasi & Pengaturan Sistem</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#0F2854] group-hover:translate-x-0.5 transition"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer Architecture Status -->
+      <div class="text-center pb-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-[10px] text-slate-600 font-medium shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Siap GAS &bull; Sync pegawai.sitabe.com &bull; Docker DB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 2: PESERTA MAGANG SHELL (STRICT: ONLY ATTENDANCE & PERSONAL LOG) ==================== -->
+    <div id="shell-intern" class="hidden flex-1 flex flex-col pb-24">
+      
+      <!-- Sticky Top Header -->
+      <header class="sticky top-0 z-20 bg-[#0F2854] text-white px-5 pt-4 pb-5 rounded-b-3xl shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 p-0.5 shadow shrink-0">
+              <img src="https://placehold.co/100x100/0F2854/F59E0B?text=AR" alt="Profil" class="w-full h-full object-cover rounded-[14px]" />
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  Peserta Magang
+                </span>
+                <span class="text-[10px] text-emerald-300 flex items-center gap-0.5">
+                  <i data-lucide="check-circle-2" class="w-3 h-3"></i> SITABE Sync
+                </span>
+              </div>
+              <h2 class="text-sm font-bold leading-tight mt-0.5">Andi Muh. Rifqi</h2>
+              <p class="text-[11px] text-slate-300">Universitas Hasanuddin &bull; NIM: D011221045</p>
+            </div>
+          </div>
+
+          <button onclick="logout()" title="Keluar" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Live Date & Digital Clock (WITA) -->
+        <div class="mt-3.5 bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-2 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs text-slate-200">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span class="live-date-text">Selasa, 17 November 2026</span>
+          </div>
+          <div class="flex items-center gap-1 font-mono text-sm font-bold text-amber-300">
+            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+            <span class="live-clock-text">07:28:45</span>
+            <span class="text-[10px] font-sans font-normal text-slate-300">WITA</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- INTERN SUB-VIEW A: PRESENSI HARIAN -->
+      <main id="intern-view-absen" class="px-4 pt-4 space-y-4 fade-in">
+        
+        <!-- Sync Banner -->
+        <div class="bg-blue-50/90 border border-blue-200/80 rounded-2xl px-3.5 py-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="database" class="w-4 h-4 text-[#1E3A8A] shrink-0"></i>
+            <span class="text-[11px] text-slate-700 leading-tight">
+              Data terhubung ke <strong>pegawai.sitabe.com</strong> &amp; <strong>Docker DB</strong>
+            </span>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 shrink-0">Aktif</span>
+        </div>
+
+        <!-- Live GPS Radar & Radius Card -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="radar" class="w-4 h-4 text-[#1E3A8A]"></i>
+              Radar Lokasi Kantor BP2JK Sulsel
+            </span>
+            <button onclick="refreshGPS()" class="text-[11px] font-semibold text-[#1E3A8A] hover:underline flex items-center gap-1">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> Segarkan
+            </button>
+          </div>
+
+          <!-- Status Box -->
+          <div id="intern-radius-box" class="rounded-xl p-3.5 border transition-colors bg-emerald-50/80 border-emerald-200">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <div id="intern-radius-icon" class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="map-pin" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div id="intern-radius-title" class="text-xs font-bold text-emerald-950">Dalam Radius Kantor</div>
+                  <div class="text-[11px] text-emerald-800 mt-0.5">
+                    Jarak: <strong id="intern-distance-val">35 m</strong> &bull; Batas Maks: <strong id="intern-max-radius">500 m</strong>
+                  </div>
+                </div>
+              </div>
+              <span id="intern-radius-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-600 text-white uppercase">
+                Dalam Radius
+              </span>
+            </div>
+
+            <div class="mt-2.5 pt-2 border-t border-emerald-200/70 flex items-center justify-between text-[10px] text-slate-600">
+              <span>Posisi Anda: <span id="intern-coords-text" class="font-mono font-semibold">-5.09215, 119.50710</span></span>
+              <a id="intern-maps-link" href="https://www.google.com/maps/place/BP2JK+SULSEL/@-5.0918753,119.5046908,819m/data=!3m1!1e3!4m8!3m7!1s0x2dbefdfedf3bfe6f:0x82d2bf155d46fb13!8m2!3d-5.0918806!4d119.5072657!9m1!1b1!16s%2Fg%2F11h4kshpxw" target="_blank" class="text-[#1E3A8A] font-bold hover:underline flex items-center gap-0.5">
+                Lokasi Kantor <i data-lucide="external-link" class="w-2.5 h-2.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Simulation Toggle for Desktop Testing -->
+          <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+            <span class="text-[10px] font-semibold text-slate-500">Uji Lokasi:</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="setLocationSimulation('inside')" id="btn-sim-inside"
+                class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-600 text-white transition">
+                Simulasi: Di Kantor
+              </button>
+              <button type="button" onclick="setLocationSimulation('outside')" id="btn-sim-outside"
+                class="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                Simulasi: Luar Radius
+              </button>
+              <button type="button" onclick="useRealDeviceGPS()" title="Gunakan GPS Asli Perangkat"
+                class="p-1.5 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700 transition">
+                <i data-lucide="locate-fixed" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shift Schedule Card -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-800">Jadwal Presensi Hari Ini</span>
+            <span id="intern-punctuality-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+              Tepat Waktu (Hadir)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/60">
+              <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Absen Datang
+              </div>
+              <div id="intern-target-masuk" class="text-base font-extrabold text-slate-900 mt-0.5">07:30 <span class="text-[11px] font-medium text-slate-500">WITA</span></div>
+              <div id="intern-status-masuk" class="text-[11px] text-slate-500 mt-1">Belum tercatat</div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/60">
+              <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Absen Pulang
+              </div>
+              <div id="intern-target-pulang" class="text-base font-extrabold text-slate-900 mt-0.5">16:00 <span class="text-[11px] font-medium text-slate-500">WITA</span></div>
+              <div id="intern-status-pulang" class="text-[11px] text-slate-500 mt-1">Belum tercatat</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Action Buttons -->
+        <div class="space-y-2.5">
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="openCameraModal('datang')"
+              class="p-4 rounded-2xl bg-gradient-to-br from-[#0F2854] to-[#1E3A8A] hover:opacity-95 active:scale-[0.98] text-white shadow-md shadow-blue-950/20 flex flex-col items-center justify-center text-center transition">
+              <div class="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center mb-2">
+                <i data-lucide="camera" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <span class="text-sm font-bold">Absen Datang</span>
+              <span class="text-[10px] text-slate-300 mt-0.5">Selfie + Geotagging</span>
+            </button>
+
+            <button onclick="openCameraModal('pulang')"
+              class="p-4 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 hover:opacity-95 active:scale-[0.98] text-[#0F2854] shadow-md shadow-amber-500/20 flex flex-col items-center justify-center text-center transition">
+              <div class="w-11 h-11 rounded-full bg-[#0F2854]/15 flex items-center justify-center mb-2">
+                <i data-lucide="log-out" class="w-5 h-5 text-[#0F2854]"></i>
+              </div>
+              <span class="text-sm font-bold">Absen Pulang</span>
+              <span class="text-[10px] text-[#0F2854]/80 font-semibold mt-0.5">Selfie + Geotagging</span>
+            </button>
+          </div>
+
+          <button onclick="openIzinModal()"
+            class="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 active:scale-[0.99] border border-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition">
+            <i data-lucide="file-text" class="w-4 h-4 text-amber-600"></i>
+            <span>Pengajuan Izin / Sakit</span>
+          </button>
+        </div>
+
+        <!-- Personal Today's Log -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-slate-800">Log Presensi Anda Hari Ini</h3>
+            <span class="text-[10px] font-semibold text-slate-400">Pribadi</span>
+          </div>
+          <div id="intern-today-log-list" class="space-y-2.5">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </main>
+
+      <!-- INTERN SUB-VIEW B: RIWAYAT PRIBADI BULAN INI -->
+      <main id="intern-view-riwayat" class="hidden px-4 pt-4 space-y-4 fade-in">
+        <!-- Personal Monthly KPI -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-xs font-bold text-slate-800">Ringkasan Kehadiran Pribadi</h3>
+              <p class="text-[11px] text-slate-500">Periode November 2026</p>
+            </div>
+            <span id="intern-personal-rate" class="text-xs font-extrabold px-2.5 py-1 rounded-xl bg-emerald-100 text-emerald-700">95%</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="bg-emerald-50/80 border border-emerald-100 rounded-xl p-2.5">
+              <div id="intern-count-hadir" class="text-lg font-extrabold text-emerald-700">10</div>
+              <div class="text-[10px] font-semibold text-emerald-800">Hadir</div>
+            </div>
+            <div class="bg-amber-50/80 border border-amber-100 rounded-xl p-2.5">
+              <div id="intern-count-terlambat" class="text-lg font-extrabold text-amber-600">1</div>
+              <div class="text-[10px] font-semibold text-amber-800">Terlambat</div>
+            </div>
+            <div class="bg-blue-50/80 border border-blue-100 rounded-xl p-2.5">
+              <div id="intern-count-izin" class="text-lg font-extrabold text-blue-700">1</div>
+              <div class="text-[10px] font-semibold text-blue-800">Izin / Sakit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal History List -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between px-1">
+            <h4 class="text-xs font-bold text-slate-700">Catatan Harian Anda</h4>
+            <span class="text-[10px] text-slate-400">Klik foto untuk memperbesar</span>
+          </div>
+          <div id="intern-personal-history-list" class="space-y-2.5">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </main>
+
+      <!-- Intern Bottom Navigation (2 Tabs Only: Absensi & Riwayat Saya) -->
+      <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-slate-200 px-6 py-2 z-30 grid grid-cols-2 gap-2">
+        <button onclick="switchInternTab('absen')" id="intern-nav-absen"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-[#0F2854] font-bold transition">
+          <i data-lucide="scan-face" class="w-5 h-5 mb-0.5 text-amber-500"></i>
+          <span class="text-[11px]">Presensi</span>
+        </button>
+
+        <button onclick="switchInternTab('riwayat')" id="intern-nav-riwayat"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition">
+          <i data-lucide="history" class="w-5 h-5 mb-0.5"></i>
+          <span class="text-[11px]">Riwayat Saya</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ==================== VIEW 3: ADMIN BP2JK SHELL (STRICT: ONLY RECAPS & SETTINGS) ==================== -->
+    <div id="shell-admin" class="hidden flex-1 flex flex-col pb-24">
+      
+      <!-- Sticky Admin Top Header -->
+      <header class="sticky top-0 z-20 bg-[#0F2854] text-white px-5 pt-4 pb-4 rounded-b-3xl shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-400 text-[#0F2854] flex items-center justify-center font-extrabold shadow shrink-0">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  Admin BP2JK Sulsel
+                </span>
+              </div>
+              <h2 class="text-sm font-bold leading-tight mt-0.5">Panel Monitoring &amp; Pengaturan</h2>
+            </div>
+          </div>
+
+          <button onclick="logout()" title="Keluar" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Subtle Integration Status Pill -->
+        <div class="mt-3 bg-white/10 border border-white/15 rounded-xl px-3 py-1.5 flex items-center justify-between text-[11px]">
+          <span class="text-slate-200 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>API: <strong>pegawai.sitabe.com</strong> &rarr; <strong>Docker DB</strong></span>
+          </span>
+          <button onclick="openApiInspectorModal()" class="text-amber-300 font-semibold hover:underline flex items-center gap-1">
+            <i data-lucide="code-2" class="w-3.5 h-3.5"></i> Payload
+          </button>
+        </div>
+      </header>
+
+      <!-- ADMIN TAB 1: REKAP BULANAN -->
+      <main id="admin-tab-bulanan" class="px-4 pt-4 space-y-3.5 fade-in">
+        <!-- Filters & Export Row -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <select id="admin-filter-month" onchange="renderAdminMonthlyRecap()"
+              class="flex-1 text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none">
+              <option value="2026-11">November 2026</option>
+              <option value="2026-10">Oktober 2026</option>
+            </select>
+
+            <select id="admin-filter-status" onchange="renderAdminMonthlyRecap()"
+              class="flex-1 text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none">
+              <option value="ALL">Semua Status</option>
+              <option value="Hadir">Hadir</option>
+              <option value="Terlambat">Terlambat</option>
+              <option value="Izin">Izin / Sakit</option>
+            </select>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-4 gap-2 pt-1">
+            <div class="bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
+              <div id="admin-kpi-total" class="text-base font-extrabold text-slate-800">0</div>
+              <div class="text-[10px] font-semibold text-slate-500">Total Log</div>
+            </div>
+            <div class="bg-emerald-50/70 p-2 rounded-xl text-center border border-emerald-100">
+              <div id="admin-kpi-hadir" class="text-base font-extrabold text-emerald-600">0</div>
+              <div class="text-[10px] font-semibold text-emerald-700">Hadir</div>
+            </div>
+            <div class="bg-amber-50/70 p-2 rounded-xl text-center border border-amber-100">
+              <div id="admin-kpi-terlambat" class="text-base font-extrabold text-amber-600">0</div>
+              <div class="text-[10px] font-semibold text-amber-700">Terlambat</div>
+            </div>
+            <div class="bg-blue-50/70 p-2 rounded-xl text-center border border-blue-100">
+              <div id="admin-kpi-izin" class="text-base font-extrabold text-blue-600">0</div>
+              <div class="text-[10px] font-semibold text-blue-700">Izin</div>
+            </div>
+          </div>
+
+          <button onclick="exportAdminCSV()"
+            class="w-full py-2.5 bg-[#0F2854] hover:bg-[#1E3A8A] text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Export CSV Rekap Bulanan</span>
+          </button>
+        </div>
+
+        <!-- Daily Attendance Records List -->
+        <div id="admin-monthly-list" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+      </main>
+
+      <!-- ADMIN TAB 2: REKAP PER PESERTA -->
+      <main id="admin-tab-peserta" class="hidden px-4 pt-4 space-y-3.5 fade-in">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="admin-search-intern" oninput="renderAdminPerIntern()" placeholder="Cari nama peserta, NIM, atau kampus..."
+            class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]" />
+        </div>
+
+        <div class="flex items-center justify-between px-1">
+          <span class="text-[11px] font-semibold text-slate-500">Data tersinkronisasi dari pegawai.sitabe.com</span>
+          <span id="admin-intern-count-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-[#0F2854]">5 Peserta</span>
+        </div>
+
+        <div id="admin-intern-list" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+      </main>
+
+      <!-- ADMIN TAB 3: REKAP LAINNYA (ANALYTICS & PER KAMPUS) -->
+      <main id="admin-tab-lainnya" class="hidden px-4 pt-4 space-y-3.5 fade-in">
+        <!-- Average Check-in / Check-out Times -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="text-[11px] text-slate-500 flex items-center gap-1">
+              <i data-lucide="sunrise" class="w-3.5 h-3.5 text-emerald-600"></i> Rata-rata Datang
+            </div>
+            <div class="text-lg font-extrabold text-slate-900 mt-1">07:24 <span class="text-xs font-normal text-slate-500">WITA</span></div>
+            <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">6 menit lebih awal</div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="text-[11px] text-slate-500 flex items-center gap-1">
+              <i data-lucide="sunset" class="w-3.5 h-3.5 text-amber-500"></i> Rata-rata Pulang
+            </div>
+            <div class="text-lg font-extrabold text-slate-900 mt-1">16:06 <span class="text-xs font-normal text-slate-500">WITA</span></div>
+            <div class="text-[10px] text-slate-500 font-semibold mt-0.5">Sesuai jadwal 16:00</div>
+          </div>
+        </div>
+
+        <!-- Punctuality Progress Bars -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+          <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-amber-500"></i>
+            Tingkat Kedisiplinan Keseluruhan
+          </h4>
+
+          <div class="space-y-2.5">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-medium text-slate-600">Hadir Tepat Waktu</span>
+                <span class="font-bold text-emerald-600">86%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-medium text-slate-600">Terlambat</span>
+                <span class="font-bold text-amber-500">9%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 9%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-medium text-slate-600">Izin / Sakit</span>
+                <span class="font-bold text-blue-600">5%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-full rounded-full" style="width: 5%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rekap per Asal Kampus / Instansi -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
+          <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-[#1E3A8A]"></i>
+            Rekapitulasi Per Asal Kampus
+          </h4>
+          <div class="divide-y divide-slate-100 text-xs">
+            <div class="py-2.5 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800">Universitas Hasanuddin (Unhas)</div>
+                <div class="text-[11px] text-slate-500">2 Peserta Magang Aktif</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[11px]">96.5% Hadir</span>
+            </div>
+            <div class="py-2.5 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800">Politeknik Negeri Ujung Pandang</div>
+                <div class="text-[11px] text-slate-500">2 Peserta Magang Aktif</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[11px]">95.0% Hadir</span>
+            </div>
+            <div class="py-2.5 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800">UIN Alauddin Makassar</div>
+                <div class="text-[11px] text-slate-500">1 Peserta Magang Aktif</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 font-bold text-[11px]">91.0% Hadir</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- ADMIN TAB 4: PENGATURAN SISTEM ABSENSI -->
+      <main id="admin-tab-pengaturan" class="hidden px-4 pt-4 space-y-3.5 fade-in">
+        <!-- Radius Kantor Card -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="radar" class="w-4 h-4 text-[#1E3A8A]"></i>
+              Radius Maksimal Absensi Kantor
+            </label>
+            <span id="setting-radius-badge" class="text-xs font-extrabold text-[#0F2854] bg-amber-100 px-2.5 py-0.5 rounded-lg">500 m</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="number" id="setting-radius-input" min="10" max="10000" value="500"
+              oninput="document.getElementById('setting-radius-badge').textContent = (this.value || 0) + ' m'"
+              class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800" />
+            <span class="text-xs font-semibold text-slate-500">Meter</span>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="applyRadiusPreset(100)" class="py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#1E3A8A] rounded-lg text-[11px] font-bold text-slate-600 transition">100m</button>
+            <button type="button" onclick="applyRadiusPreset(250)" class="py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#1E3A8A] rounded-lg text-[11px] font-bold text-slate-600 transition">250m</button>
+            <button type="button" onclick="applyRadiusPreset(500)" class="py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#1E3A8A] rounded-lg text-[11px] font-bold text-slate-600 transition">500m</button>
+            <button type="button" onclick="applyRadiusPreset(1000)" class="py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#1E3A8A] rounded-lg text-[11px] font-bold text-slate-600 transition">1000m</button>
+          </div>
+        </div>
+
+        <!-- Titik Koordinat Kantor BP2JK Sulsel -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-rose-600"></i>
+              Titik Koordinat BP2JK Sulsel
+            </span>
+            <button type="button" onclick="resetOfficeCoords()" class="text-[11px] font-semibold text-[#1E3A8A] hover:underline">
+              Reset Default
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1">Latitude</label>
+              <input type="number" step="any" id="setting-lat" value="-5.0918806"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-semibold text-slate-800" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1">Longitude</label>
+              <input type="number" step="any" id="setting-lng" value="119.5072657"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-semibold text-slate-800" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="setAdminCurrentGPS()"
+              class="py-2 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-[11px] font-semibold text-slate-700 flex items-center justify-center gap-1 transition">
+              <i data-lucide="locate" class="w-3.5 h-3.5 text-[#1E3A8A]"></i>
+              <span>Lokasi Saat Ini</span>
+            </button>
+            <a href="https://www.google.com/maps/place/BP2JK+SULSEL/@-5.0918753,119.5046908,819m/data=!3m1!1e3!4m8!3m7!1s0x2dbefdfedf3bfe6f:0x82d2bf155d46fb13!8m2!3d-5.0918806!4d119.5072657!9m1!1b1!16s%2Fg%2F11h4kshpxw" target="_blank"
+              class="py-2 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-[11px] font-semibold text-slate-700 flex items-center justify-center gap-1 transition">
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Buka Google Maps</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Jam Operasional Absensi -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-3">
+          <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i>
+            Jam Operasional Absensi
+          </span>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1">Jam Masuk</label>
+              <input type="time" id="setting-jam-masuk" value="07:30"
+                class="w-full px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1">Jam Pulang</label>
+              <input type="time" id="setting-jam-pulang" value="16:00"
+                class="w-full px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-500 mb-1">Toleransi (Mnt)</label>
+              <input type="number" id="setting-toleransi" min="0" max="60" value="0"
+                class="w-full px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Integrasi API & Docker Database Card -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="server" class="w-4 h-4 text-[#1E3A8A]"></i>
+              Koneksi API &amp; Docker Database
+            </span>
+            <button type="button" onclick="openApiInspectorModal()" class="text-[11px] font-bold text-[#1E3A8A] hover:underline">
+              Lihat JSON
+            </button>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1.5 text-[11px]">
+            <div class="flex justify-between">
+              <span class="text-slate-500">SSO Endpoint:</span>
+              <span class="font-mono font-semibold text-slate-700">pegawai.sitabe.com/api/auth</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Docker DB Endpoint:</span>
+              <span class="font-mono font-semibold text-slate-700">api.sitabe.com/v1/absensi</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="saveAdminConfiguration()"
+          class="w-full py-3.5 bg-[#0F2854] hover:bg-[#1E3A8A] active:scale-[0.99] text-white font-bold text-xs rounded-2xl shadow-md transition flex items-center justify-center gap-2">
+          <i data-lucide="save" class="w-4 h-4 text-amber-400"></i>
+          <span>Simpan Pengaturan Absensi</span>
+        </button>
+      </main>
+
+      <!-- Admin Bottom Navigation (4 Tabs: Rekap Bulanan, Per Peserta, Rekap Lainnya, Pengaturan) -->
+      <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-2 z-30 grid grid-cols-4 gap-1">
+        <button onclick="switchAdminTab('bulanan')" id="admin-nav-bulanan"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-[#0F2854] font-bold transition">
+          <i data-lucide="calendar-check" class="w-4 h-4 mb-0.5 text-amber-500"></i>
+          <span class="text-[10px]">Bulanan</span>
+        </button>
+
+        <button onclick="switchAdminTab('peserta')" id="admin-nav-peserta"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition">
+          <i data-lucide="users" class="w-4 h-4 mb-0.5"></i>
+          <span class="text-[10px]">Per Peserta</span>
+        </button>
+
+        <button onclick="switchAdminTab('lainnya')" id="admin-nav-lainnya"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 mb-0.5"></i>
+          <span class="text-[10px]">Rekap Lain</span>
+        </button>
+
+        <button onclick="switchAdminTab('pengaturan')" id="admin-nav-pengaturan"
+          class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition">
+          <i data-lucide="settings" class="w-4 h-4 mb-0.5"></i>
+          <span class="text-[10px]">Pengaturan</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ==================== MODAL 1: SELFIE CAMERA WITH GEOTAG WATERMARK ==================== -->
+    <div id="modal-camera" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="w-full max-w-[390px] bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+        <div class="bg-[#0F2854] text-white px-4 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
+            <span id="camera-modal-title" class="text-sm font-bold">Selfie Absen Datang</span>
+          </div>
+          <button onclick="closeCameraModal()" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="relative bg-slate-900 aspect-[3/4] w-full overflow-hidden flex items-center justify-center">
+          <video id="camera-video" autoplay playsinline class="w-full h-full object-cover mirror-video"></video>
+          
+          <!-- Fallback Simulated Camera View -->
+          <div id="camera-fallback" class="hidden absolute inset-0 bg-gradient-to-b from-slate-800 to-slate-900 flex flex-col items-center justify-center text-center p-6 text-white">
+            <div class="w-24 h-24 rounded-full bg-slate-700 border-2 border-amber-400 flex items-center justify-center mb-3">
+              <i data-lucide="user-check" class="w-12 h-12 text-amber-400"></i>
+            </div>
+            <p class="text-xs font-bold text-amber-300">Simulasi Kamera Selfie</p>
+            <p class="text-[11px] text-slate-300 mt-1">Kamera perangkat tidak terdeteksi/diblokir di pratinjau. Tekan tombol di bawah untuk membuat foto bukti ber-watermark GPS.</p>
+          </div>
+
+          <img id="captured-preview" class="hidden w-full h-full object-cover" alt="Hasil Selfie" />
+
+          <!-- Live Geotag Watermark Overlay -->
+          <div class="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl p-3 text-white text-[10px] leading-relaxed pointer-events-none">
+            <div class="flex items-center justify-between font-bold text-amber-300 text-[11px] mb-0.5">
+              <span>Andi Muh. Rifqi</span>
+              <span id="wm-type-badge" class="px-1.5 py-0.5 rounded bg-emerald-500 text-white text-[9px] uppercase">DATANG</span>
+            </div>
+            <div id="wm-datetime" class="font-mono text-slate-200">17 Nov 2026 &bull; 07:28:45 WITA</div>
+            <div id="wm-location" class="text-slate-300 truncate">📍 BP2JK Sulsel (-5.09215, 119.50710) &bull; Jarak 35m</div>
+          </div>
+        </div>
+
+        <canvas id="snapshot-canvas" class="hidden"></canvas>
+
+        <div class="p-4 bg-white">
+          <div id="camera-controls-capture">
+            <button onclick="captureSelfie()"
+              class="w-full py-3.5 bg-[#0F2854] hover:bg-[#1E3A8A] text-white font-bold text-xs rounded-2xl shadow-md flex items-center justify-center gap-2 transition">
+              <i data-lucide="aperture" class="w-4 h-4 text-amber-400"></i>
+              <span>Ambil Foto Selfie</span>
+            </button>
+          </div>
+
+          <div id="camera-controls-confirm" class="hidden grid grid-cols-2 gap-2.5">
+            <button onclick="retakeSelfie()"
+              class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+              Ulangi Foto
+            </button>
+            <button onclick="submitAttendancePhoto()"
+              class="py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+              Simpan Presensi
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL 2: FORM PENGAJUAN IZIN / SAKIT ==================== -->
+    <div id="modal-izin" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl fade-in">
+        <div class="bg-[#0F2854] text-white px-5 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="file-plus-2" class="w-4 h-4 text-amber-400"></i>
+            <h3 class="text-sm font-bold">Pengajuan Izin / Sakit</h3>
+          </div>
+          <button onclick="closeIzinModal()" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <form onsubmit="submitIzinForm(event)" class="p-5 space-y-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Kategori</label>
+            <select id="izin-jenis" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]">
+              <option value="Izin">Izin (Keperluan Kampus / Keluarga)</option>
+              <option value="Sakit">Sakit (Dengan Surat Keterangan)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal</label>
+            <input type="date" id="izin-tanggal" required
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Alasan / Keterangan</label>
+            <textarea id="izin-keterangan" rows="3" required placeholder="Tuliskan alasan izin atau sakit secara jelas..."
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Lampiran Bukti (Opsional)</label>
+            <input type="file" id="izin-file" accept="image/*,.pdf" onchange="handleIzinFilePreview(event)"
+              class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-[#1E3A8A] hover:file:bg-blue-100" />
+            <div id="izin-file-badge" class="hidden mt-1.5 text-[11px] text-emerald-700 font-semibold"></div>
+          </div>
+
+          <div class="pt-2 flex gap-2.5">
+            <button type="button" onclick="closeIzinModal()"
+              class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+              Batal
+            </button>
+            <button type="submit"
+              class="flex-1 py-3 bg-[#0F2854] hover:bg-[#1E3A8A] text-white font-bold text-xs rounded-xl shadow-md transition">
+              Kirim Pengajuan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL 3: SELFIE PHOTO VIEWER LIGHTBOX ==================== -->
+    <div id="modal-photo-viewer" onclick="closePhotoViewer()" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="max-w-[380px] w-full bg-white rounded-3xl overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+        <div class="px-4 py-3 bg-[#0F2854] text-white flex items-center justify-between">
+          <span id="viewer-title" class="text-xs font-bold">Bukti Presensi</span>
+          <button onclick="closePhotoViewer()" class="p-1 rounded-lg bg-white/10 text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <img id="viewer-img" src="" alt="Bukti Selfie" class="w-full aspect-[3/4] object-cover bg-slate-900" />
+        <div id="viewer-caption" class="p-3.5 text-xs text-slate-600 bg-slate-50"></div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL 4: INTERN DETAIL DRAWER (FOR ADMIN) ==================== -->
+    <div id="modal-intern-detail" onclick="closeInternDetailModal()" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl fade-in" onclick="event.stopPropagation()">
+        <div class="bg-[#0F2854] text-white px-5 py-4 flex items-center justify-between">
+          <div>
+            <h3 id="detail-intern-name" class="text-sm font-bold">Detail Peserta Magang</h3>
+            <p id="detail-intern-univ" class="text-[11px] text-slate-300">Universitas Hasanuddin</p>
+          </div>
+          <button onclick="closeInternDetailModal()" class="p-1.5 rounded-lg bg-white/10 text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div id="detail-intern-body" class="p-5 space-y-3 max-h-[70vh] overflow-y-auto">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL 5: DEVELOPER API & DOCKER PAYLOAD INSPECTOR ==================== -->
+    <div id="modal-api-inspector" onclick="closeApiInspectorModal()" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl fade-in" onclick="event.stopPropagation()">
+        <div class="bg-[#0F2854] text-white px-5 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="code-2" class="w-4 h-4 text-amber-400"></i>
+            <span class="text-xs font-bold">Struktur Payload API (GAS &rarr; Docker DB)</span>
+          </div>
+          <button onclick="closeApiInspectorModal()" class="p-1 rounded-lg bg-white/10 text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="p-4 space-y-3">
+          <p class="text-[11px] text-slate-600 leading-relaxed">
+            Gunakan struktur JSON ini pada Google Apps Script (<code class="bg-slate-100 px-1 rounded">UrlFetchApp.fetch</code>) saat menghubungkan ke backend Docker dan SSO <code class="bg-slate-100 px-1 rounded">pegawai.sitabe.com</code>:
+          </p>
+          <pre id="api-json-preview" class="bg-slate-900 text-emerald-300 p-3.5 rounded-2xl text-[10px] font-mono overflow-x-auto leading-relaxed"></pre>
+          <button onclick="copyApiPayload()"
+            class="w-full py-2.5 bg-[#0F2854] hover:bg-[#1E3A8A] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition">
+            <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Salin Contoh Payload JSON</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== JAVASCRIPT STATE & LOGIC ==================== -->
+  <script>
+    const STORAGE_KEY = 'sitabe_magang_bp2jk_v2';
+
+    const DEFAULT_SETTINGS = {
+      officeName: 'BP2JK Wilayah Sulawesi Selatan',
+      lat: -5.0918806,
+      lng: 119.5072657,
+      radius: 500,
+      jamMasuk: '07:30',
+      jamPulang: '16:00',
+      toleransiMenit: 0
+    };
+
+    const LOGGED_INTERN = {
+      id: 'MGG-001',
+      nim: 'D011221045',
+      name: 'Andi Muh. Rifqi',
+      univ: 'Universitas Hasanuddin',
+      prodi: 'Teknik Sipil'
+    };
+
+    const INITIAL_INTERNS = [
+      { id: 'MGG-001', nim: 'D011221045', name: 'Andi Muh. Rifqi', univ: 'Universitas Hasanuddin', prodi: 'Teknik Sipil' },
+      { id: 'MGG-002', nim: '42521018', name: 'Siti Nurhaliza Putri', univ: 'Politeknik Negeri Ujung Pandang', prodi: 'Teknik Informatika' },
+      { id: 'MGG-003', nim: 'D041221012', name: 'Muh. Fadhil Akbar', univ: 'Universitas Hasanuddin', prodi: 'Teknik Elektro' },
+      { id: 'MGG-004', nim: '60900121034', name: 'Nurul Aulia Rahma', univ: 'UIN Alauddin Makassar', prodi: 'Sistem Informasi' },
+      { id: 'MGG-005', nim: '42521044', name: 'Reza Pahlevi', univ: 'Politeknik Negeri Ujung Pandang', prodi: 'Administrasi Bisnis' }
+    ];
+
+    const INITIAL_RECORDS = [
+      {
+        id: 1,
+        internId: 'MGG-001',
+        internName: 'Andi Muh. Rifqi',
+        univ: 'Universitas Hasanuddin',
+        dateISO: '2026-11-16',
+        dateLabel: 'Senin, 16 Nov 2026',
+        month: '2026-11',
+        checkIn: '07:22',
+        checkOut: '16:04',
+        distance: '32 m',
+        status: 'Hadir',
+        note: 'Tepat waktu di Kantor BP2JK Sulsel',
+        photo: 'https://placehold.co/450x600/0F2854/F59E0B?text=Andi+Muh.+Rifqi%0ADatang+07:22+WITA%0ABP2JK+Sulsel+(32m)'
+      },
+      {
+        id: 2,
+        internId: 'MGG-002',
+        internName: 'Siti Nurhaliza Putri',
+        univ: 'Politeknik Negeri Ujung Pandang',
+        dateISO: '2026-11-17',
+        dateLabel: 'Selasa, 17 Nov 2026',
+        month: '2026-11',
+        checkIn: '07:26',
+        checkOut: '-',
+        distance: '48 m',
+        status: 'Hadir',
+        note: 'Selfie datang terverifikasi GPS',
+        photo: 'https://placehold.co/450x600/1E3A8A/FDE68A?text=Siti+Nurhaliza%0ADatang+07:26+WITA%0ABP2JK+Sulsel+(48m)'
+      },
+      {
+        id: 3,
+        internId: 'MGG-003',
+        internName: 'Muh. Fadhil Akbar',
+        univ: 'Universitas Hasanuddin',
+        dateISO: '2026-11-17',
+        dateLabel: 'Selasa, 17 Nov 2026',
+        month: '2026-11',
+        checkIn: '07:42',
+        checkOut: '-',
+        distance: '65 m',
+        status: 'Terlambat',
+        note: 'Terlambat 12 menit dari jadwal 07:30',
+        photo: 'https://placehold.co/450x600/78350F/FDE68A?text=Muh.+Fadhil+Akbar%0ADatang+07:42+WITA%0ATerlambat+12+Menit'
+      },
+      {
+        id: 4,
+        internId: 'MGG-001',
+        internName: 'Andi Muh. Rifqi',
+        univ: 'Universitas Hasanuddin',
+        dateISO: '2026-11-13',
+        dateLabel: 'Jumat, 13 Nov 2026',
+        month: '2026-11',
+        checkIn: '07:39',
+        checkOut: '16:10',
+        distance: '41 m',
+        status: 'Terlambat',
+        note: 'Terlambat 9 menit (Hujan deras)',
+        photo: 'https://placehold.co/450x600/78350F/FDE68A?text=Andi+Muh.+Rifqi%0ADatang+07:39+WITA%0ATerlambat+9+Menit'
+      },
+      {
+        id: 5,
+        internId: 'MGG-001',
+        internName: 'Andi Muh. Rifqi',
+        univ: 'Universitas Hasanuddin',
+        dateISO: '2026-11-12',
+        dateLabel: 'Kamis, 12 Nov 2026',
+        month: '2026-11',
+        checkIn: '-',
+        checkOut: '-',
+        distance: '-',
+        status: 'Izin',
+        note: 'Izin seminar proposal di kampus Unhas',
+        photo: ''
+      },
+      {
+        id: 6,
+        internId: 'MGG-004',
+        internName: 'Nurul Aulia Rahma',
+        univ: 'UIN Alauddin Makassar',
+        dateISO: '2026-11-17',
+        dateLabel: 'Selasa, 17 Nov 2026',
+        month: '2026-11',
+        checkIn: '-',
+        checkOut: '-',
+        distance: '-',
+        status: 'Izin',
+        note: 'Sakit demam (melampirkan surat dokter)',
+        photo: ''
+      },
+      {
+        id: 7,
+        internId: 'MGG-005',
+        internName: 'Reza Pahlevi',
+        univ: 'Politeknik Negeri Ujung Pandang',
+        dateISO: '2026-11-17',
+        dateLabel: 'Selasa, 17 Nov 2026',
+        month: '2026-11',
+        checkIn: '07:19',
+        checkOut: '-',
+        distance: '24 m',
+        status: 'Hadir',
+        note: 'Tepat waktu di Kantor BP2JK Sulsel',
+        photo: 'https://placehold.co/450x600/0F2854/F59E0B?text=Reza+Pahlevi%0ADatang+07:19+WITA%0ABP2JK+Sulsel+(24m)'
+      },
+      {
+        id: 8,
+        internId: 'MGG-001',
+        internName: 'Andi Muh. Rifqi',
+        univ: 'Universitas Hasanuddin',
+        dateISO: '2026-10-30',
+        dateLabel: 'Jumat, 30 Okt 2026',
+        month: '2026-10',
+        checkIn: '07:20',
+        checkOut: '16:02',
+        distance: '29 m',
+        status: 'Hadir',
+        note: 'Rekap bulan Oktober 2026',
+        photo: 'https://placehold.co/450x600/0F2854/F59E0B?text=Andi+Muh.+Rifqi%0AOktober+2026'
+      }
+    ];
+
+    // Load or initialize persistent state in localStorage
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return {
+            settings: { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) },
+            interns: parsed.interns || INITIAL_INTERNS,
+            records: parsed.records || INITIAL_RECORDS
+          };
+        }
+      } catch (e) {}
+      return {
+        settings: { ...DEFAULT_SETTINGS },
+        interns: [...INITIAL_INTERNS],
+        records: [...INITIAL_RECORDS]
+      };
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          settings: state.settings,
+          interns: state.interns,
+          records: state.records
+        }));
+      } catch (e) {}
+    }
+
+    let state = {
+      ...loadState(),
+      currentRole: null, // 'intern' | 'admin'
+      gps: {
+        lat: -5.0921500,
+        lng: 119.5071000,
+        distance: 35,
+        isWithinRadius: true
+      },
+      cameraMode: 'datang',
+      cameraStream: null,
+      usingFallbackCamera: false,
+      capturedDataUrl: null
+    };
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      startClockLoop();
+      syncSettingsToUI();
+      recalculateDistance();
+      document.getElementById('izin-tanggal').value = new Date().toISOString().split('T')[0];
+    });
+
+    // ==================== TOAST NOTIFICATIONS ====================
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const styles = {
+        success: 'bg-emerald-600 text-white border-emerald-500',
+        error: 'bg-rose-600 text-white border-rose-500',
+        warning: 'bg-amber-500 text-slate-950 border-amber-400',
+        info: 'bg-[#0F2854] text-white border-blue-800'
+      };
+      el.className = `${styles[type] || styles.info} px-4 py-3 rounded-2xl shadow-lg border text-xs font-semibold fade-in pointer-events-auto`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => el.remove(), 250);
+      }, 3000);
+    }
+
+    // ==================== CLOCK & PUNCTUALITY STATUS ====================
+    function startClockLoop() {
+      function tick() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        const timeStr = `${hh}:${mm}:${ss}`;
+
+        document.querySelectorAll('.live-date-text').forEach(el => el.textContent = dateStr);
+        document.querySelectorAll('.live-clock-text').forEach(el => el.textContent = timeStr);
+
+        const wmDt = document.getElementById('wm-datetime');
+        if (wmDt) wmDt.textContent = `${now.getDate()} ${months[now.getMonth()].slice(0,3)} ${now.getFullYear()} • ${timeStr} WITA`;
+
+        // Punctuality check against Admin configured Jam Masuk + Toleransi
+        const [targetH, targetM] = state.settings.jamMasuk.split(':').map(Number);
+        const deadlineMinutes = (targetH * 60 + targetM) + Number(state.settings.toleransiMenit || 0);
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+        const badge = document.getElementById('intern-punctuality-badge');
+        if (badge) {
+          if (nowMinutes <= deadlineMinutes) {
+            badge.textContent = 'Tepat Waktu (Hadir)';
+            badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+          } else {
+            const lateMins = nowMinutes - deadlineMinutes;
+            badge.textContent = `Terlambat (+${lateMins} mnt)`;
+            badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800';
+          }
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // ==================== AUTH & STRICT ROLE SEPARATION ====================
+    function togglePasswordVisibility() {
+      const inp = document.getElementById('login-password');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('login-username').value.trim().toLowerCase();
+      if (!val) return;
+      loginAsRole(val.includes('admin') ? 'admin' : 'intern');
+    }
+
+    function loginAsRole(role) {
+      state.currentRole = role;
+      document.getElementById('view-login').classList.add('hidden');
+
+      if (role === 'intern') {
+        document.getElementById('shell-admin').classList.add('hidden');
+        document.getElementById('shell-intern').classList.remove('hidden');
+        syncSettingsToUI();
+        recalculateDistance();
+        renderInternLogs();
+        switchInternTab('absen');
+        showToast('Login berhasil sebagai Peserta Magang (Andi Muh. Rifqi)', 'success');
+      } else {
+        document.getElementById('shell-intern').classList.add('hidden');
+        document.getElementById('shell-admin').classList.remove('hidden');
+        syncSettingsToUI();
+        renderAdminMonthlyRecap();
+        renderAdminPerIntern();
+        switchAdminTab('bulanan');
+        showToast('Login berhasil sebagai Admin BP2JK Sulsel', 'success');
+      }
+      lucide.createIcons();
+    }
+
+    function logout() {
+      state.currentRole = null;
+      document.getElementById('shell-intern').classList.add('hidden');
+      document.getElementById('shell-admin').classList.add('hidden');
+      document.getElementById('view-login').classList.remove('hidden');
+      showToast('Anda telah keluar dari aplikasi.', 'info');
+    }
+
+    // ==================== NAVIGATION SWITCHERS ====================
+    function switchInternTab(tab) {
+      ['absen', 'riwayat'].forEach(t => {
+        document.getElementById(`intern-view-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`intern-nav-${t}`);
+        btn.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition';
+        const svg = btn.querySelector('svg');
+        if (svg) svg.classList.remove('text-amber-500');
+      });
+
+      document.getElementById(`intern-view-${tab}`).classList.remove('hidden');
+      const active = document.getElementById(`intern-nav-${tab}`);
+      active.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-[#0F2854] font-bold transition';
+      const activeSvg = active.querySelector('svg');
+      if (activeSvg) activeSvg.classList.add('text-amber-500');
+    }
+
+    function switchAdminTab(tab) {
+      ['bulanan', 'peserta', 'lainnya', 'pengaturan'].forEach(t => {
+        document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`admin-nav-${t}`);
+        btn.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-700 font-medium transition';
+        const svg = btn.querySelector('svg');
+        if (svg) svg.classList.remove('text-amber-500');
+      });
+
+      document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+      const active = document.getElementById(`admin-nav-${tab}`);
+      active.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-[#0F2854] font-bold transition';
+      const activeSvg = active.querySelector('svg');
+      if (activeSvg) activeSvg.classList.add('text-amber-500');
+    }
+
+    // ==================== GPS HAVERSINE & SIMULATION ====================
+    function getHaversineMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const p1 = lat1 * Math.PI / 180;
+      const p2 = lat2 * Math.PI / 180;
+      const dp = (lat2 - lat1) * Math.PI / 180;
+      const dl = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+      return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    function recalculateDistance() {
+      const dist = getHaversineMeters(state.gps.lat, state.gps.lng, state.settings.lat, state.settings.lng);
+      state.gps.distance = dist;
+      state.gps.isWithinRadius = dist <= state.settings.radius;
+
+      document.getElementById('intern-distance-val').textContent = `${dist.toLocaleString('id-ID')} m`;
+      document.getElementById('intern-max-radius').textContent = `${state.settings.radius.toLocaleString('id-ID')} m`;
+      document.getElementById('intern-coords-text').textContent = `${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}`;
+      document.getElementById('wm-location').textContent = `📍 BP2JK Sulsel (${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)}) • Jarak ${dist}m`;
+
+      const box = document.getElementById('intern-radius-box');
+      const icon = document.getElementById('intern-radius-icon');
+      const title = document.getElementById('intern-radius-title');
+      const badge = document.getElementById('intern-radius-badge');
+
+      if (state.gps.isWithinRadius) {
+        box.className = 'rounded-xl p-3.5 border transition-colors bg-emerald-50/80 border-emerald-200';
+        icon.className = 'w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0';
+        title.className = 'text-xs font-bold text-emerald-950';
+        title.textContent = 'Dalam Radius Kantor BP2JK Sulsel';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-600 text-white uppercase';
+        badge.textContent = 'Dalam Radius';
+      } else {
+        box.className = 'rounded-xl p-3.5 border transition-colors bg-rose-50/85 border-rose-200';
+        icon.className = 'w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0';
+        title.className = 'text-xs font-bold text-rose-950';
+        title.textContent = 'Di Luar Radius Kantor BP2JK Sulsel';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-600 text-white uppercase';
+        badge.textContent = 'Di Luar Radius';
+      }
+    }
+
+    function setLocationSimulation(mode) {
+      const btnIn = document.getElementById('btn-sim-inside');
+      const btnOut = document.getElementById('btn-sim-outside');
+      if (mode === 'inside') {
+        state.gps.lat = state.settings.lat - 0.00027;
+        state.gps.lng = state.settings.lng - 0.00016;
+        btnIn.className = 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-600 text-white transition';
+        btnOut.className = 'px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+        recalculateDistance();
+        showToast('Simulasi GPS diatur di dalam area kantor.', 'success');
+      } else {
+        state.gps.lat = state.settings.lat - 0.01150;
+        state.gps.lng = state.settings.lng + 0.00680;
+        btnOut.className = 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-rose-600 text-white transition';
+        btnIn.className = 'px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+        recalculateDistance();
+        showToast('Simulasi GPS diatur di luar batas radius kantor.', 'warning');
+      }
+    }
+
+    function useRealDeviceGPS() {
+      if (!navigator.geolocation) {
+        showToast('Browser tidak mendukung GPS.', 'error');
+        return;
+      }
+      showToast('Mengambil lokasi GPS perangkat...', 'info');
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          state.gps.lat = pos.coords.latitude;
+          state.gps.lng = pos.coords.longitude;
+          recalculateDistance();
+          showToast('Koordinat GPS asli perangkat diperbarui!', 'success');
+        },
+        () => showToast('Izin GPS perangkat ditolak atau tidak tersedia.', 'error'),
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    }
+
+    function refreshGPS() {
+      recalculateDistance();
+      showToast('Status jarak & radius diperbarui.', 'info');
+    }
+
+    // ==================== SELFIE CAMERA & WATERMARK ====================
+    async function openCameraModal(mode) {
+      if (!state.gps.isWithinRadius) {
+        showToast(`Absensi ditolak! Jarak Anda ${state.gps.distance}m (Maks. ${state.settings.radius}m).`, 'error');
+        return;
+      }
+
+      state.cameraMode = mode;
+      state.capturedDataUrl = null;
+
+      document.getElementById('camera-modal-title').textContent = mode === 'datang' ? 'Selfie Absen Datang' : 'Selfie Absen Pulang';
+      const badge = document.getElementById('wm-type-badge');
+      badge.textContent = mode === 'datang' ? 'DATANG' : 'PULANG';
+      badge.className = mode === 'datang'
+        ? 'px-1.5 py-0.5 rounded bg-emerald-500 text-white text-[9px] uppercase'
+        : 'px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 text-[9px] uppercase';
+
+      const video = document.getElementById('camera-video');
+      const fallback = document.getElementById('camera-fallback');
+      const preview = document.getElementById('captured-preview');
+
+      video.classList.remove('hidden');
+      fallback.classList.add('hidden');
+      preview.classList.add('hidden');
+      document.getElementById('camera-controls-capture').classList.remove('hidden');
+      document.getElementById('camera-controls-confirm').classList.add('hidden');
+
+      document.getElementById('modal-camera').classList.remove('hidden');
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 600 }, height: { ideal: 800 } },
+          audio: false
+        });
+        state.cameraStream = stream;
+        state.usingFallbackCamera = false;
+        video.srcObject = stream;
+      } catch (e) {
+        state.usingFallbackCamera = true;
+        video.classList.add('hidden');
+        fallback.classList.remove('hidden');
+      }
+    }
+
+    function closeCameraModal() {
+      if (state.cameraStream) {
+        state.cameraStream.getTracks().forEach(t => t.stop());
+        state.cameraStream = null;
+      }
+      document.getElementById('modal-camera').classList.add('hidden');
+    }
+
+    function captureSelfie() {
+      const canvas = document.getElementById('snapshot-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 600;
+      canvas.height = 800;
+
+      const video = document.getElementById('camera-video');
+      if (!state.usingFallbackCamera && video.readyState >= 2) {
+        ctx.save();
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
+      } else {
+        const grad = ctx.createLinearGradient(0, 0, 0, 800);
+        grad.addColorStop(0, '#0F2854');
+        grad.addColorStop(1, '#1E3A8A');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 600, 800);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+        ctx.beginPath();
+        ctx.arc(300, 310, 105, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#F59E0B';
+        ctx.font = 'bold 40px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('SELFIE TERVERIFIKASI', 300, 305);
+        ctx.fillStyle = '#E2E8F0';
+        ctx.font = '22px Inter, sans-serif';
+        ctx.fillText('SITABE Magang - BP2JK Sulsel', 300, 348);
+        ctx.textAlign = 'left';
+      }
+
+      // Burn Geotag Watermark Stamp
+      ctx.fillStyle = 'rgba(15, 40, 84, 0.88)';
+      ctx.fillRect(24, 600, 552, 172);
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(24, 600, 552, 172);
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')} WITA`;
+      const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      ctx.fillStyle = '#FBBF24';
+      ctx.font = 'bold 24px Inter, sans-serif';
+      ctx.fillText(`${LOGGED_INTERN.name} (${state.cameraMode.toUpperCase()})`, 42, 642);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '20px monospace';
+      ctx.fillText(`${dateStr} • ${timeStr}`, 42, 678);
+
+      ctx.fillStyle = '#CBD5E1';
+      ctx.font = '18px Inter, sans-serif';
+      ctx.fillText(`BP2JK Sulsel (${state.gps.lat.toFixed(5)}, ${state.gps.lng.toFixed(5)})`, 42, 714);
+      ctx.fillText(`Jarak: ${state.gps.distance}m (Batas ${state.settings.radius}m) • Tervalidasi`, 42, 748);
+
+      state.capturedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+      const preview = document.getElementById('captured-preview');
+      preview.src = state.capturedDataUrl;
+      preview.classList.remove('hidden');
+      video.classList.add('hidden');
+      document.getElementById('camera-fallback').classList.add('hidden');
+
+      document.getElementById('camera-controls-capture').classList.add('hidden');
+      document.getElementById('camera-controls-confirm').classList.remove('hidden');
+    }
+
+    function retakeSelfie() {
+      const video = document.getElementById('camera-video');
+      document.getElementById('captured-preview').classList.add('hidden');
+      if (state.usingFallbackCamera) {
+        document.getElementById('camera-fallback').classList.remove('hidden');
+      } else {
+        video.classList.remove('hidden');
+      }
+      document.getElementById('camera-controls-capture').classList.remove('hidden');
+      document.getElementById('camera-controls-confirm').classList.add('hidden');
+    }
+
+    function submitAttendancePhoto() {
+      const now = new Date();
+      const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const todayISO = now.toISOString().split('T')[0];
+
+      const [targetH, targetM] = state.settings.jamMasuk.split(':').map(Number);
+      const deadline = (targetH * 60 + targetM) + Number(state.settings.toleransiMenit || 0);
+      const isLate = (now.getHours() * 60 + now.getMinutes()) > deadline;
+      const computedStatus = isLate ? 'Terlambat' : 'Hadir';
+
+      // Check if intern already has a record today
+      let todayRec = state.records.find(r => r.internId === LOGGED_INTERN.id && r.dateISO === todayISO);
+
+      if (state.cameraMode === 'datang') {
+        if (todayRec) {
+          todayRec.checkIn = hhmm;
+          todayRec.distance = `${state.gps.distance} m`;
+          todayRec.status = computedStatus;
+          todayRec.photo = state.capturedDataUrl;
+          todayRec.note = `Selfie datang pukul ${hhmm} WITA (${state.gps.distance}m)`;
+        } else {
+          state.records.unshift({
+            id: Date.now(),
+            internId: LOGGED_INTERN.id,
+            internName: LOGGED_INTERN.name,
+            univ: LOGGED_INTERN.univ,
+            dateISO: todayISO,
+            dateLabel: 'Hari Ini (17 Nov 2026)',
+            month: '2026-11',
+            checkIn: hhmm,
+            checkOut: '-',
+            distance: `${state.gps.distance} m`,
+            status: computedStatus,
+            note: `Selfie datang pukul ${hhmm} WITA (${state.gps.distance}m)`,
+            photo: state.capturedDataUrl
+          });
+        }
+        showToast(`Absen Datang berhasil (${hhmm} WITA - ${computedStatus})!`, 'success');
+      } else {
+        if (todayRec) {
+          todayRec.checkOut = hhmm;
+          todayRec.photoPulang = state.capturedDataUrl;
+          todayRec.note += ` • Pulang ${hhmm} WITA`;
+        } else {
+          state.records.unshift({
+            id: Date.now(),
+            internId: LOGGED_INTERN.id,
+            internName: LOGGED_INTERN.name,
+            univ: LOGGED_INTERN.univ,
+            dateISO: todayISO,
+            dateLabel: 'Hari Ini (17 Nov 2026)',
+            month: '2026-11',
+            checkIn: '-',
+            checkOut: hhmm,
+            distance: `${state.gps.distance} m`,
+            status: 'Hadir',
+            note: `Selfie pulang pukul ${hhmm} WITA`,
+            photo: state.capturedDataUrl
+          });
+        }
+        showToast(`Absen Pulang berhasil dicatat (${hhmm} WITA)!`, 'success');
+      }
+
+      saveState();
+      renderInternLogs();
+      closeCameraModal();
+    }
+
+    // ==================== PENGAJUAN IZIN / SAKIT ====================
+    function openIzinModal() {
+      document.getElementById('izin-file-badge').classList.add('hidden');
+      document.getElementById('modal-izin').classList.remove('hidden');
+    }
+
+    function closeIzinModal() {
+      document.getElementById('modal-izin').classList.add('hidden');
+    }
+
+    function handleIzinFilePreview(e) {
+      const file = e.target.files[0];
+      const badge = document.getElementById('izin-file-badge');
+      if (file) {
+        badge.textContent = `📎 Lampiran dipilih: ${file.name}`;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function submitIzinForm(e) {
+      e.preventDefault();
+      const jenis = document.getElementById('izin-jenis').value;
+      const tanggal = document.getElementById('izin-tanggal').value;
+      const ket = document.getElementById('izin-keterangan').value.trim();
+
+      state.records.unshift({
+        id: Date.now(),
+        internId: LOGGED_INTERN.id,
+        internName: LOGGED_INTERN.name,
+        univ: LOGGED_INTERN.univ,
+        dateISO: tanggal,
+        dateLabel: `Pengajuan (${tanggal})`,
+        month: tanggal.slice(0, 7) || '2026-11',
+        checkIn: '-',
+        checkOut: '-',
+        distance: '-',
+        status: 'Izin',
+        note: `${jenis}: ${ket}`,
+        photo: ''
+      });
+
+      saveState();
+      renderInternLogs();
+      closeIzinModal();
+      e.target.reset();
+      showToast(`Pengajuan ${jenis} berhasil disimpan!`, 'success');
+    }
+
+    // ==================== RENDER INTERN PERSONAL LOGS ====================
+    function renderInternLogs() {
+      const myRecords = state.records.filter(r => r.internId === LOGGED_INTERN.id);
+      const todayISO = new Date().toISOString().split('T')[0];
+      const todayRec = myRecords.find(r => r.dateISO === todayISO);
+
+      // Update Today's Shift Card
+      document.getElementById('intern-status-masuk').innerHTML = todayRec && todayRec.checkIn !== '-'
+        ? `<span class="text-emerald-600 font-bold">Tercatat ${todayRec.checkIn} (${todayRec.status})</span>`
+        : 'Belum tercatat';
+
+      document.getElementById('intern-status-pulang').innerHTML = todayRec && todayRec.checkOut !== '-'
+        ? `<span class="text-amber-600 font-bold">Tercatat ${todayRec.checkOut}</span>`
+        : 'Belum tercatat';
+
+      // Render Today's Log List
+      const todayContainer = document.getElementById('intern-today-log-list');
+      if (!todayRec) {
+        todayContainer.innerHTML = `
+          <div class="text-center py-4 px-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <p class="text-xs font-medium text-slate-500">Belum ada presensi hari ini.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Silakan lakukan Absen Datang saat tiba di kantor.</p>
+          </div>
+        `;
+      } else {
+        todayContainer.innerHTML = buildRecordCardHTML(todayRec, false);
+      }
+
+      // Update Personal Monthly KPI
+      const novRecords = myRecords.filter(r => r.month === '2026-11');
+      const hadirCount = novRecords.filter(r => r.status === 'Hadir').length + 9; // +9 historical days
+      const telatCount = novRecords.filter(r => r.status === 'Terlambat').length;
+      const izinCount = novRecords.filter(r => r.status === 'Izin').length;
+      const totalDays = hadirCount + telatCount + izinCount;
+      const rate = totalDays ? Math.round(((hadirCount + telatCount) / totalDays) * 100) : 100;
+
+      document.getElementById('intern-count-hadir').textContent = hadirCount;
+      document.getElementById('intern-count-terlambat').textContent = telatCount;
+      document.getElementById('intern-count-izin').textContent = izinCount;
+      document.getElementById('intern-personal-rate').textContent = `${rate}%`;
+
+      // Render Personal History List
+      const histContainer = document.getElementById('intern-personal-history-list');
+      histContainer.innerHTML = myRecords.map(rec => buildRecordCardHTML(rec, false)).join('');
+      lucide.createIcons();
+    }
+
+    // ==================== RENDER ADMIN VIEWS ====================
+    function renderAdminMonthlyRecap() {
+      const monthVal = document.getElementById('admin-filter-month').value;
+      const statusVal = document.getElementById('admin-filter-status').value;
+
+      const byMonth = state.records.filter(r => r.month === monthVal);
+      const filtered = statusVal === 'ALL' ? byMonth : byMonth.filter(r => r.status === statusVal);
+
+      document.getElementById('admin-kpi-total').textContent = byMonth.length;
+      document.getElementById('admin-kpi-hadir').textContent = byMonth.filter(r => r.status === 'Hadir').length;
+      document.getElementById('admin-kpi-terlambat').textContent = byMonth.filter(r => r.status === 'Terlambat').length;
+      document.getElementById('admin-kpi-izin').textContent = byMonth.filter(r => r.status === 'Izin').length;
+
+      const listEl = document.getElementById('admin-monthly-list');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 bg-white rounded-2xl border border-slate-200/80">Tidak ada data presensi untuk filter ini.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(rec => buildRecordCardHTML(rec, true)).join('');
+      lucide.createIcons();
+    }
+
+    function buildRecordCardHTML(rec, showInternName) {
+      const badgeClass = rec.status === 'Hadir'
+        ? 'bg-emerald-100 text-emerald-700'
+        : rec.status === 'Terlambat'
+          ? 'bg-amber-100 text-amber-800'
+          : 'bg-blue-100 text-blue-700';
+
+      const thumb = rec.photo
+        ? `<img src="${rec.photo}" onclick="openPhotoViewer('${rec.photo}', '${rec.internName} • ${rec.dateLabel}', '${rec.note}')" class="w-12 h-14 rounded-xl object-cover border border-slate-200 cursor-pointer shrink-0" />`
+        : `<div class="w-12 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100"><i data-lucide="file-text" class="w-5 h-5"></i></div>`;
+
+      return `
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex items-start gap-3">
+          ${thumb}
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-900 truncate">${showInternName ? rec.internName : rec.dateLabel}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${badgeClass}">${rec.status}</span>
+            </div>
+            <div class="text-[10px] text-slate-500 mt-0.5">${showInternName ? `${rec.dateLabel} &bull; ${rec.univ}` : rec.note}</div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
+              <span>Datang: <strong>${rec.checkIn}</strong></span>
+              <span>Pulang: <strong>${rec.checkOut}</strong></span>
+              <span>Jarak: <strong>${rec.distance}</strong></span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminPerIntern() {
+      const q = document.getElementById('admin-search-intern').value.toLowerCase();
+      const filtered = state.interns.filter(i =>
+        i.name.toLowerCase().includes(q) || i.univ.toLowerCase().includes(q) || i.nim.toLowerCase().includes(q)
+      );
+
+      document.getElementById('admin-intern-count-badge').textContent = `${filtered.length} Peserta`;
+
+      const container = document.getElementById('admin-intern-list');
+      container.innerHTML = filtered.map((intern, idx) => {
+        const recs = state.records.filter(r => r.internId === intern.id);
+        const hadir = recs.filter(r => r.status === 'Hadir').length + 14;
+        const telat = recs.filter(r => r.status === 'Terlambat').length + (idx % 2);
+        const izin = recs.filter(r => r.status === 'Izin').length;
+        const pct = Math.round(((hadir + telat) / (hadir + telat + izin)) * 100);
+
+        return `
+          <div onclick="openInternDetailModal('${intern.id}')" class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#1E3A8A]/40 cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <div class="text-xs font-bold text-slate-900">${intern.name}</div>
+                <div class="text-[11px] text-slate-500">${intern.univ} &bull; ${intern.nim}</div>
+              </div>
+              <span class="text-xs font-extrabold text-[#0F2854] bg-amber-100 px-2.5 py-1 rounded-xl">${pct}%</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-[11px] pt-2 border-t border-slate-100">
+              <div class="bg-emerald-50/80 py-1 rounded-lg text-emerald-700 font-semibold">Hadir: ${hadir}</div>
+              <div class="bg-amber-50/80 py-1 rounded-lg text-amber-700 font-semibold">Telat: ${telat}</div>
+              <div class="bg-blue-50/80 py-1 rounded-lg text-blue-700 font-semibold">Izin: ${izin}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openInternDetailModal(internId) {
+      const intern = state.interns.find(i => i.id === internId);
+      if (!intern) return;
+
+      document.getElementById('detail-intern-name').textContent = intern.name;
+      document.getElementById('detail-intern-univ').textContent = `${intern.univ} (${intern.prodi}) • NIM: ${intern.nim}`;
+
+      const recs = state.records.filter(r => r.internId === internId);
+      const body = document.getElementById('detail-intern-body');
+      body.innerHTML = recs.length
+        ? recs.map(r => buildRecordCardHTML(r, false)).join('')
+        : '<p class="text-xs text-slate-500 text-center py-4">Belum ada log presensi terbaru.</p>';
+
+      document.getElementById('modal-intern-detail').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeInternDetailModal() {
+      document.getElementById('modal-intern-detail').classList.add('hidden');
+    }
+
+    // ==================== ADMIN SETTINGS & SYNC ====================
+    function syncSettingsToUI() {
+      // Sync to Intern View
+      document.getElementById('intern-target-masuk').innerHTML = `${state.settings.jamMasuk} <span class="text-[11px] font-medium text-slate-500">WITA</span>`;
+      document.getElementById('intern-target-pulang').innerHTML = `${state.settings.jamPulang} <span class="text-[11px] font-medium text-slate-500">WITA</span>`;
+      document.getElementById('intern-max-radius').textContent = `${state.settings.radius.toLocaleString('id-ID')} m`;
+      document.getElementById('intern-maps-link').href = `https://www.google.com/maps?q=${state.settings.lat},${state.settings.lng}`;
+
+      // Sync to Admin Settings Inputs
+      document.getElementById('setting-radius-input').value = state.settings.radius;
+      document.getElementById('setting-radius-badge').textContent = `${state.settings.radius} m`;
+      document.getElementById('setting-lat').value = state.settings.lat;
+      document.getElementById('setting-lng').value = state.settings.lng;
+      document.getElementById('setting-jam-masuk').value = state.settings.jamMasuk;
+      document.getElementById('setting-jam-pulang').value = state.settings.jamPulang;
+      document.getElementById('setting-toleransi').value = state.settings.toleransiMenit;
+    }
+
+    function applyRadiusPreset(val) {
+      document.getElementById('setting-radius-input').value = val;
+      document.getElementById('setting-radius-badge').textContent = `${val} m`;
+    }
+
+    function resetOfficeCoords() {
+      document.getElementById('setting-lat').value = DEFAULT_SETTINGS.lat;
+      document.getElementById('setting-lng').value = DEFAULT_SETTINGS.lng;
+      showToast('Koordinat dikembalikan ke titik default BP2JK Sulsel.', 'info');
+    }
+
+    function setAdminCurrentGPS() {
+      if (!navigator.geolocation) {
+        showToast('GPS tidak didukung oleh browser.', 'error');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          document.getElementById('setting-lat').value = pos.coords.latitude.toFixed(7);
+          document.getElementById('setting-lng').value = pos.coords.longitude.toFixed(7);
+          showToast('Koordinat lokasi saat ini berhasil diambil.', 'success');
+        },
+        () => showToast('Gagal mengambil GPS perangkat.', 'error')
+      );
+    }
+
+    function saveAdminConfiguration() {
+      state.settings.radius = Math.max(10, Number(document.getElementById('setting-radius-input').value) || 500);
+      state.settings.lat = parseFloat(document.getElementById('setting-lat').value) || DEFAULT_SETTINGS.lat;
+      state.settings.lng = parseFloat(document.getElementById('setting-lng').value) || DEFAULT_SETTINGS.lng;
+      state.settings.jamMasuk = document.getElementById('setting-jam-masuk').value || '07:30';
+      state.settings.jamPulang = document.getElementById('setting-jam-pulang').value || '16:00';
+      state.settings.toleransiMenit = Math.max(0, Number(document.getElementById('setting-toleransi').value) || 0);
+
+      saveState();
+      syncSettingsToUI();
+      recalculateDistance();
+      showToast(`Pengaturan disimpan! Radius aktif: ${state.settings.radius}m`, 'success');
+    }
+
+    // ==================== EXPORT CSV & PHOTO VIEWER & API INSPECTOR ====================
+    function exportAdminCSV() {
+      const headers = ['ID Peserta', 'Nama Peserta', 'Asal Kampus', 'Tanggal', 'Jam Datang', 'Jam Pulang', 'Jarak', 'Status', 'Keterangan'];
+      const rows = state.records.map(r => [
+        `"${r.internId}"`,
+        `"${r.internName}"`,
+        `"${r.univ}"`,
+        `"${r.dateISO}"`,
+        `"${r.checkIn}"`,
+        `"${r.checkOut}"`,
+        `"${r.distance}"`,
+        `"${r.status}"`,
+        `"${r.note}"`
+      ]);
+      const csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const link = document.createElement('a');
+      link.setAttribute('href', encodeURI(csv));
+      link.setAttribute('download', 'Rekap_Absensi_Magang_BP2JK_Sulsel.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('File CSV rekap absensi berhasil diunduh.', 'success');
+    }
+
+    function openPhotoViewer(src, title, caption) {
+      document.getElementById('viewer-img').src = src;
+      document.getElementById('viewer-title').textContent = title;
+      document.getElementById('viewer-caption').textContent = caption;
+      document.getElementById('modal-photo-viewer').classList.remove('hidden');
+    }
+
+    function closePhotoViewer() {
+      document.getElementById('modal-photo-viewer').classList.add('hidden');
+    }
+
+    function openApiInspectorModal() {
+      const samplePayload = {
+        source: "SITABE_MAGANG_GAS",
+        sso_provider: "pegawai.sitabe.com",
+        target_db: "docker_mysql_sitabe",
+        office_config: state.settings,
+        attendance_record: {
+          intern_id: LOGGED_INTERN.id,
+          nim: LOGGED_INTERN.nim,
+          timestamp_wita: new Date().toISOString(),
+          type: "DATANG",
+          coordinates: { lat: state.gps.lat, lng: state.gps.lng },
+          distance_meters: state.gps.distance,
+          status: "Hadir",
+          selfie_base64: "data:image/jpeg;base64,..."
+        }
+      };
+      document.getElementById('api-json-preview').textContent = JSON.stringify(samplePayload, null, 2);
+      document.getElementById('modal-api-inspector').classList.remove('hidden');
+    }
+
+    function closeApiInspectorModal() {
+      document.getElementById('modal-api-inspector').classList.add('hidden');
+    }
+
+    function copyApiPayload() {
+      const text = document.getElementById('api-json-preview').textContent;
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Contoh JSON Payload disalin ke clipboard!', 'success');
+    }
+  </script>
+</body>
+</html>
